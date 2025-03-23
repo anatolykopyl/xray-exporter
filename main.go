@@ -14,7 +14,7 @@ import (
 var opts struct {
 	Listen                 string `short:"l" long:"listen" description:"Listen address" value-name:"[ADDR]:PORT" default:":9550"`
 	MetricsPath            string `short:"m" long:"metrics-path" description:"Metrics path" value-name:"PATH" default:"/scrape"`
-	V2RayEndpoint          string `short:"e" long:"v2ray-endpoint" description:"V2Ray API endpoint" value-name:"HOST:PORT" default:"127.0.0.1:8080"`
+	XrayEndpoint           string `short:"e" long:"xray-endpoint" description:"Xray API endpoint" value-name:"HOST:PORT" default:"127.0.0.1:8080"`
 	ScrapeTimeoutInSeconds int64  `short:"t" long:"scrape-timeout" description:"The timeout in seconds for every individual scrape" value-name:"N" default:"3"`
 	Version                bool   `long:"version" description:"Display the version and exit"`
 }
@@ -39,14 +39,14 @@ func main() {
 		os.Exit(0)
 	}
 
-	fmt.Printf("V2Ray Exporter %v-%v (built %v)\n", buildVersion, buildCommit, buildDate)
+	fmt.Printf("Xray Exporter %v-%v (built %v)\n", buildVersion, buildCommit, buildDate)
 
 	if opts.Version {
 		os.Exit(0)
 	}
 
 	scrapeTimeout := time.Duration(opts.ScrapeTimeoutInSeconds) * time.Second
-	exporter, err = NewExporter(opts.V2RayEndpoint, scrapeTimeout)
+	exporter, err = NewExporter(opts.XrayEndpoint, scrapeTimeout)
 	if err != nil {
 		os.Exit(1)
 	}
@@ -55,11 +55,11 @@ func main() {
 	http.HandleFunc(opts.MetricsPath, scrapeHandler)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte(`<html>
-<head><title>V2Ray Exporter</title></head>
+<head><title>Xray Exporter</title></head>
 <body>
-<h1>V2Ray Exporter ` + buildVersion + `</h1>
+<h1>Xray Exporter ` + buildVersion + `</h1>
 <p><a href='/metrics'>Exporter Metrics</a></p>
-<p><a href='` + opts.MetricsPath + `'>Scrape V2Ray Metrics</a></p>
+<p><a href='` + opts.MetricsPath + `'>Scrape Xray Metrics</a></p>
 </body>
 </html>
 `))

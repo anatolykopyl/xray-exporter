@@ -1,10 +1,10 @@
 apiVersion: skaffold/v2beta5
 kind: Config
 metadata:
-  name: v2ray-exporter
+  name: xray-exporter
 build:
   artifacts:
-    - image: wi1dcard/v2ray-exporter
+    - image: anatolykopyl/xray-exporter
       docker:
         buildArgs:
           ARCH: amd64

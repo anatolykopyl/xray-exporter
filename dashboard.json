@@ -130,7 +130,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "count(v2ray_up{job=~\"$job\",instance=~\"$instance\"} == 1)",
+          "expr": "count(xray_up{job=~\"$job\",instance=~\"$instance\"} == 1)",
           "instant": false,
           "refId": "A"
         }
@@ -138,7 +138,7 @@
       "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
-      "title": "V2Ray Online",
+      "title": "Xray Online",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -304,14 +304,14 @@
       ],
       "targets": [
         {
-          "expr": "v2ray_uptime_seconds{job=~\"$job\",instance=~\"$instance\"}",
+          "expr": "xray_uptime_seconds{job=~\"$job\",instance=~\"$instance\"}",
           "format": "table",
           "instant": true,
           "legendFormat": "",
           "refId": "A"
         },
         {
-          "expr": "sum by (instance) (increase(v2ray_traffic_downlink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[$__range]))",
+          "expr": "sum by (instance) (increase(xray_traffic_downlink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[$__range]))",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -320,7 +320,7 @@
           "refId": "B"
         },
         {
-          "expr": "sum by (instance) (increase(v2ray_traffic_uplink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[$__range]))",
+          "expr": "sum by (instance) (increase(xray_traffic_uplink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[$__range]))",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -386,13 +386,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(v2ray_traffic_downlink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[5m]))",
+          "expr": "sum(irate(xray_traffic_downlink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[5m]))",
           "interval": "",
           "legendFormat": "Downlink",
           "refId": "A"
         },
         {
-          "expr": "sum(irate(v2ray_traffic_uplink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[5m]))",
+          "expr": "sum(irate(xray_traffic_uplink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[5m]))",
           "interval": "",
           "legendFormat": "Uplink",
           "refId": "B"
@@ -508,7 +508,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "count(v2ray_up{job=~\"$job\",instance=~\"$instance\"}) - count(v2ray_up{job=~\"$job\",instance=~\"$instance\"} == 1)",
+          "expr": "count(xray_up{job=~\"$job\",instance=~\"$instance\"}) - count(xray_up{job=~\"$job\",instance=~\"$instance\"} == 1)",
           "instant": false,
           "refId": "A"
         }
@@ -516,7 +516,7 @@
       "thresholds": "0,1",
       "timeFrom": null,
       "timeShift": null,
-      "title": "V2Ray Offline",
+      "title": "Xray Offline",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -695,7 +695,7 @@
       ],
       "targets": [
         {
-          "expr": "increase(v2ray_traffic_downlink_bytes_total{job=~\"$job\",instance=~\"$instance\"}[$__range])",
+          "expr": "increase(xray_traffic_downlink_bytes_total{job=~\"$job\",instance=~\"$instance\"}[$__range])",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -703,7 +703,7 @@
           "refId": "A"
         },
         {
-          "expr": "increase(v2ray_traffic_uplink_bytes_total{job=~\"$job\",instance=~\"$instance\"}[$__range])",
+          "expr": "increase(xray_traffic_uplink_bytes_total{job=~\"$job\",instance=~\"$instance\"}[$__range])",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -769,13 +769,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(v2ray_traffic_downlink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[5m]))",
+          "expr": "sum(irate(xray_traffic_downlink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[5m]))",
           "interval": "",
           "legendFormat": "Downlink",
           "refId": "A"
         },
         {
-          "expr": "sum(irate(v2ray_traffic_uplink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[5m]))",
+          "expr": "sum(irate(xray_traffic_uplink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[5m]))",
           "interval": "",
           "legendFormat": "Uplink",
           "refId": "B"
@@ -871,7 +871,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(v2ray_traffic_downlink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[5m])",
+          "expr": "irate(xray_traffic_downlink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[5m])",
           "interval": "",
           "legendFormat": "{{target}}",
           "refId": "A"
@@ -970,7 +970,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(v2ray_traffic_uplink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[5m])",
+          "expr": "irate(xray_traffic_uplink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"inbound\"}[5m])",
           "interval": "",
           "legendFormat": "{{target}}",
           "refId": "A"
@@ -1066,7 +1066,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(v2ray_traffic_downlink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"outbound\"}[5m])",
+          "expr": "irate(xray_traffic_downlink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"outbound\"}[5m])",
           "interval": "",
           "legendFormat": "{{target}}",
           "refId": "A"
@@ -1165,7 +1165,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(v2ray_traffic_uplink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"outbound\"}[5m])",
+          "expr": "irate(xray_traffic_uplink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"outbound\"}[5m])",
           "interval": "",
           "legendFormat": "{{target}}",
           "refId": "A"
@@ -1261,7 +1261,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(v2ray_traffic_downlink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"user\"}[5m])",
+          "expr": "irate(xray_traffic_downlink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"user\"}[5m])",
           "interval": "",
           "legendFormat": "{{target}}",
           "refId": "A"
@@ -1357,7 +1357,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(v2ray_traffic_uplink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"user\"}[5m])",
+          "expr": "irate(xray_traffic_uplink_bytes_total{job=~\"$job\",instance=~\"$instance\",dimension=\"user\"}[5m])",
           "interval": "",
           "legendFormat": "{{target}}",
           "refId": "A"
@@ -1415,14 +1415,14 @@
         "allValue": null,
         "current": {},
         "datasource": "${DS_PROMETHEUS}",
-        "definition": "query_result(count_over_time(v2ray_up[$__range]))",
+        "definition": "query_result(count_over_time(xray_up[$__range]))",
         "hide": 0,
         "includeAll": true,
         "label": "Job",
         "multi": true,
         "name": "job",
         "options": [],
-        "query": "query_result(count_over_time(v2ray_up[$__range]))",
+        "query": "query_result(count_over_time(xray_up[$__range]))",
         "refresh": 2,
         "regex": "/job=\"(.*?)\"/",
         "skipUrlSync": false,
@@ -1437,14 +1437,14 @@
         "allValue": null,
         "current": {},
         "datasource": "${DS_PROMETHEUS}",
-        "definition": "query_result(count_over_time(v2ray_up{job=\"$job\"}[$__range]))",
+        "definition": "query_result(count_over_time(xray_up{job=\"$job\"}[$__range]))",
         "hide": 0,
         "includeAll": true,
         "label": "Instance",
         "multi": true,
         "name": "instance",
         "options": [],
-        "query": "query_result(count_over_time(v2ray_up{job=\"$job\"}[$__range]))",
+        "query": "query_result(count_over_time(xray_up{job=\"$job\"}[$__range]))",
         "refresh": 2,
         "regex": "/instance=\"(.*?)\"/",
         "skipUrlSync": false,
@@ -1475,7 +1475,7 @@
     ]
   },
   "timezone": "",
-  "title": "V2Ray Dashboard",
+  "title": "Xray Dashboard",
   "uid": "CCSvIIEZz",
   "version": 1
 }

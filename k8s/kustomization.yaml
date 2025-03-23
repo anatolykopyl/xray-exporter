@@ -9,4 +9,4 @@ nameSuffix: -develop
 namespace: default
 
 commonLabels:
-  app: v2ray-exporter
+  app: xray-exporter

@@ -3,12 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"google.golang.org/grpc/credentials/insecure"
 	"strings"
 	"sync"
 	"time"
 
-	"github.com/v2fly/v2ray-core/v4/app/stats/command"
+	"google.golang.org/grpc/credentials/insecure"
+
+	"github.com/xtls/xray-core/app/stats/command"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/sirupsen/logrus"
@@ -32,7 +33,7 @@ func NewExporter(endpoint string, scrapeTimeout time.Duration) (*Exporter, error
 		registry:      prometheus.NewRegistry(),
 
 		totalScrapes: prometheus.NewCounter(prometheus.CounterOpts{
-			Namespace: "v2ray",
+			Namespace: "xray",
 			Name:      "scrapes_total",
 			Help:      "Total number of scrapes performed",
 		}),
@@ -46,7 +47,7 @@ func NewExporter(endpoint string, scrapeTimeout time.Duration) (*Exporter, error
 	}{
 		"up":                           {txt: "Indicate scrape succeeded or not"},
 		"scrape_duration_seconds":      {txt: "Scrape duration in seconds"},
-		"uptime_seconds":               {txt: "V2Ray uptime in seconds"},
+		"uptime_seconds":               {txt: "Xray uptime in seconds"},
 		"traffic_uplink_bytes_total":   {txt: "Number of transmitted bytes", lbls: []string{"dimension", "target"}},
 		"traffic_downlink_bytes_total": {txt: "Number of received bytes", lbls: []string{"dimension", "target"}},
 	} {
@@ -77,7 +78,7 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	start := time.Now().UnixNano()
 
 	var up float64 = 1
-	if err := e.scrapeV2Ray(ch); err != nil {
+	if err := e.scrapeXray(ch); err != nil {
 		up = 0
 		logrus.Warnf("Scrape failed: %s", err)
 	}
@@ -96,21 +97,21 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- e.totalScrapes.Desc()
 }
 
-func (e *Exporter) scrapeV2Ray(ch chan<- prometheus.Metric) error {
+func (e *Exporter) scrapeXray(ch chan<- prometheus.Metric) error {
 	client := command.NewStatsServiceClient(e.conn)
 
-	if err := e.scrapeV2RaySysMetrics(context.Background(), ch, client); err != nil {
+	if err := e.scrapeXraySysMetrics(context.Background(), ch, client); err != nil {
 		return err
 	}
 
-	if err := e.scrapeV2RayMetrics(context.Background(), ch, client); err != nil {
+	if err := e.scrapeXrayMetrics(context.Background(), ch, client); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (e *Exporter) scrapeV2RayMetrics(ctx context.Context, ch chan<- prometheus.Metric, client command.StatsServiceClient) error {
+func (e *Exporter) scrapeXrayMetrics(ctx context.Context, ch chan<- prometheus.Metric, client command.StatsServiceClient) error {
 	resp, err := client.QueryStats(ctx, &command.QueryStatsRequest{Reset_: false})
 	if err != nil {
 		return fmt.Errorf("failed to get stats: %w", err)
@@ -129,7 +130,7 @@ func (e *Exporter) scrapeV2RayMetrics(ctx context.Context, ch chan<- prometheus.
 	return nil
 }
 
-func (e *Exporter) scrapeV2RaySysMetrics(ctx context.Context, ch chan<- prometheus.Metric, client command.StatsServiceClient) error {
+func (e *Exporter) scrapeXraySysMetrics(ctx context.Context, ch chan<- prometheus.Metric, client command.StatsServiceClient) error {
 	resp, err := client.GetSysStats(ctx, &command.SysStatsRequest{})
 	if err != nil {
 		return fmt.Errorf("failed to get sys stats: %w", err)
@@ -180,5 +181,5 @@ func (e *Exporter) registerConstMetric(ch chan<- prometheus.Metric, metric strin
 }
 
 func (e *Exporter) newMetricDescr(metricName string, docString string, labels []string) *prometheus.Desc {
-	return prometheus.NewDesc(prometheus.BuildFQName("v2ray", "", metricName), docString, labels, nil)
+	return prometheus.NewDesc(prometheus.BuildFQName("xray", "", metricName), docString, labels, nil)
 }

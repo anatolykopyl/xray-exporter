@@ -5,7 +5,7 @@ COMMIT        = $(shell git rev-parse --short HEAD)
 FULL_COMMIT   = $(shell git rev-parse HEAD)
 RELEASE_NOTES = `git log ${LAST_TAG}..HEAD --oneline --decorate`
 DATE          = $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
-DOCKER_REPO   = wi1dcard/v2ray-exporter
+DOCKER_REPO   = anatolykopyl/xray-exporter
 
 export DOCKER_CLI_EXPERIMENTAL=enabled
 
@@ -34,7 +34,7 @@ build: check_tag
 	    ./...
 
 release: build
-	@ghr -u wi1dcard -b "${RELEASE_NOTES}" -c "${FULL_COMMIT}" "${TAG}" dist/
+	@ghr -u anatolykopyl -b "${RELEASE_NOTES}" -c "${FULL_COMMIT}" "${TAG}" dist/
 
 docker_build: build
 	docker build --build-arg ARCH=amd64 -t "${DOCKER_REPO}:${TAG}-amd64" .

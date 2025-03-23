@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: v2ray-exporter
+  name: xray-exporter
 spec:
   selector:
     matchLabels: {} # Managed by Kustomize
@@ -10,8 +10,8 @@ spec:
       labels: {} # Managed by Kustomize
     spec:
       containers:
-        - name: v2ray-exporter
-          image: wi1dcard/v2ray-exporter
+        - name: xray-exporter
+          image: anatolykopyl/xray-exporter
           resources:
             limits:
               memory: 128Mi
