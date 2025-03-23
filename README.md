@@ -1,14 +1,14 @@
 # Xray Exporter
 
-An exporter that collect Xray metrics over its [Stats API][stats-api] and export them to Prometheus.
+An exporter that collects Xray metrics over its [Stats API](https://xtls.github.io/en/config/stats.html) and exports them to Prometheus.
 
-![][grafana-screeenshot]
+![](./screenshots/grafana.png)
 
 ## Quick Start
 
 ### Binaries
 
-The latest binaries are made available on GitHub [releases][github-releases] page:
+The latest binaries are made available on the [releases page](https://github.com/anatolykopyl/xray-exporter/releases):
 
 ```bash
 wget -O /tmp/xray-exporter https://github.com/anatolykopyl/xray-exporter/releases/latest/download/xray-exporter_linux_amd64
@@ -16,19 +16,19 @@ mv /tmp/xray-exporter /usr/local/bin/xray-exporter
 chmod +x /usr/local/bin/xray-exporter
 ```
 
-### Docker (Recommended)
+### Docker
 
 You can also find the docker images on [Docker Hub](https://hub.docker.com/r/anatolykopyl/xray-exporter). The images are made for multi-arch. You can run it from your Raspberry Pi or any other ARM, ARM64 devices without changing the image name:
 
 ```bash
-docker run --rm -it anatolykopyl/xray-exporter:latest
+docker run --rm anatolykopyl/xray-exporter:latest
 ```
 
 ### Grafana Dashboard
 
-A simple Grafana dashboard is also available [here][grafana-dashboard]. Please refer to the [Grafana docs][grafana-importing-dashboard] to get the steps of importing dashboards from JSON files.
+A simple Grafana dashboard is also available [here](./dashboard.json). Please refer to the [Grafana docs](https://grafana.com/docs/grafana/latest/reference/export_import/#importing-a-dashboard) to get the steps of importing dashboards from JSON files.
 
-Note that the dashboard on [grafana.com][grafana-dashboard-grafana-dot-com] may not be the latest version, please consider downloading the dashboard JSON from the link above.
+Also available on [grafana.com](https://grafana.com/grafana/dashboards/23145), but may not be the latest version, please consider downloading the dashboard JSON from the link above.
 
 ## Tutorial
 
@@ -41,23 +41,10 @@ Firstly, you will need to make sure the API and statistics related features have
     "stats": {},
     "api": {
         "tag": "api",
+        "listen": "127.0.0.1:54321",
         "services": [
             "StatsService"
         ]
-    },
-    "policy": {
-        "levels": {
-            "0": {
-                "statsUserUplink": true,
-                "statsUserDownlink": true
-            }
-        },
-        "system": {
-            "statsInboundUplink": true,
-            "statsInboundDownlink": true,
-            "statsOutboundUplink": true,
-            "statsOutboundDownlink": true
-        }
     },
     "inbounds": [
         {
@@ -80,40 +67,21 @@ Firstly, you will need to make sure the API and statistics related features have
                     }
                 ]
             }
-        },
-        {
-            "tag": "api",
-            "listen": "127.0.0.1",
-            "port": 54321,
-            "protocol": "dokodemo-door",
-            "settings": {
-                "address": "127.0.0.1"
-            }
         }
     ],
     "outbounds": [
         {
             "protocol": "freedom",
-            "settings": {}
+            "tag": "direct"
         }
-    ],
-    "routing": {
-        "rules": [
-            {
-                "inboundTag": [
-                    "api"
-                ],
-                "outboundTag": "api",
-                "type": "field"
-            }
-        ]
-    }
+    ]
 }
 ```
 
-As you can see, we opened two inbounds in the configuration above. The first inbound accepts VMess connections from user `foo@example.com` and `bar@example.com`, and the second one listens port 54321 on localhost and handles the API calls, which is the endpoint that the exporter scrapes. If you'd like to run Xray and exporter on different machines, consider use `0.0.0.0` instead of `127.0.0.1` and be careful with the security risks.
+As you can see, we opened the API on port `:54321` in the configuration above, which is the endpoint that the exporter scrapes. 
+If you'd like to run Xray and exporter on different machines, consider using `0.0.0.0` instead of `127.0.0.1` and be careful with the security risks.
 
-Additionally, you should also enable `stats`, `api`, and `policy` settings, and setup proper routing rules in order to get traffic statistics works. For more information, please visit [The Beginner's Guide of Xray][xray-beginners-guide].
+Additionally, `stats` must be present in settings, even if empty. For more information, please visit [the Xray config reference](https://xtls.github.io/en/config/).
 
 The next step is to start the exporter:
 
@@ -123,16 +91,18 @@ xray-exporter --xray-endpoint "127.0.0.1:54321"
 docker run --network="host" --rm -d anatolykopyl/xray-exporter:latest --xray-endpoint "127.0.0.1:54321"
 ```
 
+The network mode in Docker must be set to `host` if you are running Xray on the same machine. If you are running Xray also in a container, consider networking them via a bridge network.
+
 The logs signifies that the exporter started to listening on the default address (`:9550`).
 
-```plain
-Xray Exporter latest-39eb972 (built 2020-04-05T05:32:01Z)
-time="2020-05-11T06:18:09Z" level=info msg="Server is ready to handle incoming scrape requests."
+```
+Xray Exporter latest-174e447 (built 2025-03-23T20:21:03Z)
+time="2025-03-23T22:48:12Z" level=info msg="Server is ready to handle incoming scrape requests."
 ```
 
 Use `--listen` option if you'd like to changing the listen address or port. You can now open `http://IP:9550` in your browser:
 
-![browser.png][browser-screenshot]
+![browser.png](./screenshots/browser.png)
 
 Click the `Scrape Xray Metrics` and the exporter will expose all metrics including Xray runtime and statistics data in the Prometheus metrics format, for example:
 
@@ -163,11 +133,11 @@ scrape_configs:
       - targets: [IP:9550]
 ```
 
-To learn more about Prometheus, please visit the [official docs][prometheus-docs].
+To learn more about Prometheus, please visit the [official docs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/).
 
 ## Digging Deeper
 
-The exporter doesn't retain the original metric names from Xray intentionally. You may find out why in the [comments][explaination-of-metric-names].
+The exporter doesn't retain the original metric names from Xray intentionally. You may find out why in the [comments](./exporter.go#L134).
 
 For users who do not really care about the internal changes, but only need a mapping table, here it is:
 
@@ -180,7 +150,6 @@ For users who do not really care about the internal changes, but only need a map
 | `sys`            | `xray_memstats_sys_bytes`         |
 | `mallocs`        | `xray_memstats_mallocs_total`     |
 | `frees`          | `xray_memstats_frees_total`       |
-| `live_objects`   | Removed. See the appendix below.   |
 | `num_gc`         | `xray_memstats_num_gc`            |
 | `pause_total_ns` | `xray_memstats_pause_total_ns`    |
 
@@ -202,13 +171,3 @@ For users who do not really care about the internal changes, but only need a map
 - <https://github.com/oliver006/redis_exporter>
 - <https://github.com/roboll/helmfile>
 
-[github-releases]: https://github.com/anatolykopyl/xray-exporter/releases
-[xray-beginners-guide]: https://guide.v2fly.org/en_US/advanced/traffic.html
-[grafana-screeenshot]: screenshots/grafana.png
-[browser-screenshot]: screenshots/browser.png
-[prometheus-docs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/
-[grafana-dashboard]: ./dashboard.json
-[grafana-dashboard-grafana-dot-com]: https://grafana.com/grafana/dashboards/11545
-[grafana-importing-dashboard]: https://grafana.com/docs/grafana/latest/reference/export_import/#importing-a-dashboard
-[explaination-of-metric-names]: https://github.com/anatolykopyl/xray-exporter/blob/110e82dfefb1b51f4da3966ddd1945b5d0dac203/exporter.go#L134
-[stats-api]: https://xtls.github.io/en/config/stats.html
