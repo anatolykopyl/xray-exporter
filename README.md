@@ -2,6 +2,8 @@
 
 An exporter that collect Xray metrics over its [Stats API][stats-api] and export them to Prometheus.
 
+![][grafana-screeenshot]
+
 ## Quick Start
 
 ### Binaries
@@ -16,7 +18,7 @@ chmod +x /usr/local/bin/xray-exporter
 
 ### Docker (Recommended)
 
-You can also find the docker images built automatically by CI from [Docker Hub](https://hub.docker.com/r/anatolykopyl/xray-exporter). The images are made for multi-arch. You can run it from your Raspberry Pi or any other ARM, ARM64 devices without changing the image name:
+You can also find the docker images on [Docker Hub](https://hub.docker.com/r/anatolykopyl/xray-exporter). The images are made for multi-arch. You can run it from your Raspberry Pi or any other ARM, ARM64 devices without changing the image name:
 
 ```bash
 docker run --rm -it anatolykopyl/xray-exporter:latest
@@ -118,13 +120,13 @@ The next step is to start the exporter:
 ```bash
 xray-exporter --xray-endpoint "127.0.0.1:54321"
 ## Or
-docker run --rm -d anatolykopyl/xray-exporter:master --xray-endpoint "127.0.0.1:54321"
+docker run --network="host" --rm -d anatolykopyl/xray-exporter:latest --xray-endpoint "127.0.0.1:54321"
 ```
 
 The logs signifies that the exporter started to listening on the default address (`:9550`).
 
 ```plain
-Xray Exporter master-39eb972 (built 2020-04-05T05:32:01Z)
+Xray Exporter latest-39eb972 (built 2020-04-05T05:32:01Z)
 time="2020-05-11T06:18:09Z" level=info msg="Server is ready to handle incoming scrape requests."
 ```
 
@@ -202,9 +204,11 @@ For users who do not really care about the internal changes, but only need a map
 
 [github-releases]: https://github.com/anatolykopyl/xray-exporter/releases
 [xray-beginners-guide]: https://guide.v2fly.org/en_US/advanced/traffic.html
-[browser-screenshot]: https://i.loli.net/2020/01/11/ZVtNEU8iqMrFGKm.png
+[grafana-screeenshot]: screenshots/grafana.png
+[browser-screenshot]: screenshots/browser.png
 [prometheus-docs]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/
 [grafana-dashboard]: ./dashboard.json
 [grafana-dashboard-grafana-dot-com]: https://grafana.com/grafana/dashboards/11545
 [grafana-importing-dashboard]: https://grafana.com/docs/grafana/latest/reference/export_import/#importing-a-dashboard
 [explaination-of-metric-names]: https://github.com/anatolykopyl/xray-exporter/blob/110e82dfefb1b51f4da3966ddd1945b5d0dac203/exporter.go#L134
+[stats-api]: https://xtls.github.io/en/config/stats.html

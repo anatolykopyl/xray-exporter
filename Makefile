@@ -47,7 +47,7 @@ docker_push: check_tag
 	docker push "${DOCKER_REPO}:${TAG}-arm"
 
 docker_manifest: check_tag
-	docker manifest create --amend "${DOCKER_REPO}:${TAG}" "${DOCKER_REPO}:${TAG}-amd64" "${DOCKER_REPO}:${TAG}-arm64" "${DOCKER_REPO}:${TAG}-arm"
-	docker manifest annotate "${DOCKER_REPO}:${TAG}" "${DOCKER_REPO}:${TAG}-arm64" --os linux --arch arm64
+	docker manifest create --amend "${DOCKER_REPO}:${TAG}" "${DOCKER_REPO}:${TAG}-arm64" "${DOCKER_REPO}:${TAG}-amd64" "${DOCKER_REPO}:${TAG}-arm"
+	docker manifest annotate "${DOCKER_REPO}:${TAG}" "${DOCKER_REPO}:${TAG}-amd64" --os linux --arch amd64
 	docker manifest annotate "${DOCKER_REPO}:${TAG}" "${DOCKER_REPO}:${TAG}-arm" --os linux --arch arm
 	docker manifest push --purge "${DOCKER_REPO}:${TAG}"
