@@ -37,9 +37,9 @@ release: build
 	@ghr -u anatolykopyl -b "${RELEASE_NOTES}" -c "${FULL_COMMIT}" "${TAG}" dist/
 
 docker_build: build
-	docker build --build-arg ARCH=amd64 -t "${DOCKER_REPO}:${TAG}-amd64" .
-	docker build --build-arg ARCH=arm64 -t "${DOCKER_REPO}:${TAG}-arm64" .
-	docker build --build-arg ARCH=arm -t "${DOCKER_REPO}:${TAG}-arm" .
+	docker build --platform linux/amd64 --build-arg ARCH=amd64 -t "${DOCKER_REPO}:${TAG}-amd64" .
+	docker build --platform linux/arm64 --build-arg ARCH=arm64 -t "${DOCKER_REPO}:${TAG}-arm64" .
+	docker build --platform linux/arm --build-arg ARCH=arm -t "${DOCKER_REPO}:${TAG}-arm" .
 
 docker_push: check_tag
 	docker push "${DOCKER_REPO}:${TAG}-amd64"
